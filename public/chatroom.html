@@ -1,11 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-    
+    <title>Chat Room</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 
 
 <body>
+
+    <div class="chat">
+
+        <div class="chat-sidebar"></div>
+
+        <div class="message-side">
+
+            <div id="messages"></div>
+
+            <div class="message-form">
+                <form id="message-form">
+                    <input id="message-input" name="message" placeholder="Message" required autocomplete="off">
+                    <button id="send-button">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script id="message-template" type="text/html">
+        <div class="chat-message">
+            <p>
+                <span class="message-name">{{username}}</span>
+                <span class="message-time">{{createdAt}}</span>
+            </p>
+            <p>{{message}}</p>
+        </div>
+    </script>
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/4.0.1/mustache.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.4/qs.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script src="js/chatroom.js"></script>
 </body>
 </html>

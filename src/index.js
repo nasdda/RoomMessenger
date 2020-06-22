@@ -3,7 +3,8 @@ const express = require('express')
 const path = require('path')
 const http = require('http')
 const socketio = require("socket.io")
-
+const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
+const { generateMessage } = require('./utils/messages')
 
 // Setup app and server
 const app = express()
@@ -16,6 +17,33 @@ const publicDirectoryPath = path.join(__dirname, '../public')
 // set up static path
 app.use(express.static(publicDirectoryPath))
 
+
+// socket start
+io.on("connection", (socket) => {
+    console.log("New user connected")
+
+    socket.on('join', (options, callback) => {
+        const { error, user } = addUser({ id: socket.id, ...options })
+
+        if (error) {
+            return callback(error)
+        }
+
+        socket.join(user.room)
+
+        socket.emit("message", generateMessage(user.room, `Welcome to room ${user.room}`))
+        callback()
+    })
+
+
+    socket.on('sendMessage', (message, callback) => {
+        // received message to send, emit
+        const user = getUser(socket.id)
+        io.to(user.room).emit('message', generateMessage(user.username, message))
+        callback()
+    })
+
+})
 
 
 
