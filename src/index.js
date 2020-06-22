@@ -32,6 +32,8 @@ io.on("connection", (socket) => {
         socket.join(user.room)
 
         socket.emit("message", generateMessage(user.room, `Welcome to room ${user.room}`))
+        // notify other users in room
+        socket.broadcast.to(user.room).emit("message", generateMessage(user.room, `${user.username} has joined!`))
         callback()
     })
 
@@ -41,6 +43,14 @@ io.on("connection", (socket) => {
         const user = getUser(socket.id)
         io.to(user.room).emit('message', generateMessage(user.username, message))
         callback()
+    })
+
+    socket.on('disconnect', () => {
+        const user = removeUser(socket.id)
+
+        if(user) {
+            io.to(user.room).emit('message', generateMessage(user.room, `${user.username} has left the room.`))
+        }
     })
 
 })
