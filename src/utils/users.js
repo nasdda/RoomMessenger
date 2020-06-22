@@ -1,4 +1,6 @@
 const users = []
+const usernameLengthLimit = 50
+const roomLengthLimit = 50
 
 const addUser = ({ id, username, room }) => {
     // Clean the data
@@ -9,6 +11,18 @@ const addUser = ({ id, username, room }) => {
     if (!username || !room) {
         return {
             error: 'Username and room are required!'
+        }
+    } else {
+        if (username.length > usernameLengthLimit){
+            return {
+                error: `Username should be within ${usernameLengthLimit} characters`
+            }
+        }
+
+        if (room.length > roomLengthLimit){
+            return {
+                error: `Room name should be within ${usernameLengthLimit} characters`
+            }
         }
     }
 

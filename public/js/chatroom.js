@@ -13,6 +13,7 @@ const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true }
 
 // Mustache Templates
 const messageTemplate = document.querySelector('#message-template').innerHTML
+const sidebarTemplate = document.querySelector("#sidebar-template").innerHTML
 
 
 // message received
@@ -26,12 +27,22 @@ socket.on("message", (message) => {
 })
 
 
+// room data received
+socket.on('roomData', ({ room, users }) => {
+    const html = Mustache.render(sidebarTemplate, {
+        room,
+        users
+    })
+    document.querySelector("#room-sidebar").innerHTML = html
+})
+
+
 // element listeners
 $messageForm.addEventListener("submit", (e) => {
     e.preventDefault()
     $messageFormButton.setAttribute('disabled', 'disabled')
     const message = e.target.elements.message.value
-    
+
 
     socket.emit('sendMessage', message, (error) => {
         $messageFormButton.removeAttribute('disabled')
@@ -49,7 +60,7 @@ $messageForm.addEventListener("submit", (e) => {
 
 // let server know user has joined
 socket.emit('join', { username, room }, (error) => {
-    if(error){
+    if (error) {
         alert(error)
         location.href = '/' // go back to index
     }
