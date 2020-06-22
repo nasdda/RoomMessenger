@@ -1,6 +1,6 @@
 const users = []
-const usernameLengthLimit = 50
-const roomLengthLimit = 50
+const usernameLengthLimit = 40
+const roomLengthLimit = 40
 
 const addUser = ({ id, username, room }) => {
     // Clean the data

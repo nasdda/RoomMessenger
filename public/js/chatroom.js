@@ -16,6 +16,21 @@ const messageTemplate = document.querySelector('#message-template').innerHTML
 const sidebarTemplate = document.querySelector("#sidebar-template").innerHTML
 
 
+const autoscroll = () => {
+    const $newMessage = $messages.lastElementChild
+    const newMessageStyles = getComputedStyle($newMessage)
+    const newMessageMargin = parseInt(newMessageStyles.marginBottom)
+    const newMessageHeight = $newMessage.offsetHeight + newMessageMargin
+    const visibleHeight = $messages.offsetHeight
+    const containerHeight = $messages.scrollHeight 
+    const scrollOffset = $messages.scrollTop + visibleHeight
+    // dont autoscroll if user is not on the bottom of the chat
+    if(containerHeight - newMessageHeight <= scrollOffset){
+        $messages.scrollTop = $messages.scrollHeight
+    }
+}
+
+
 // message received
 socket.on("message", (message) => {
     const html = Mustache.render(messageTemplate, {
@@ -24,6 +39,7 @@ socket.on("message", (message) => {
         createdAt: moment(message.createdAt).format('h:mm a')
     })
     $messages.insertAdjacentHTML('beforeend', html)
+    autoscroll()
 })
 
 
