@@ -33,7 +33,7 @@ socket.on('roomData', ({ room, users }) => {
         room,
         users
     })
-    document.querySelector("#room-sidebar").innerHTML = html
+    document.querySelector("#chat-sidebar").innerHTML = html
 })
 
 
