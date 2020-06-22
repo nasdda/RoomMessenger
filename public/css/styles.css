@@ -98,24 +98,26 @@ input[type="text"] {
 }
 
 #message-input{
-    width: 89%;
+    width: 85%;
     height: 100%;
     outline: none;
     font-size: 24px;
     font-family: monospace;
     padding-left: 10px;
     background-color: #242b3d;
-    color: white
+    color: white;
+    margin-left: 20px;
 }
 
 #send-button {
-    width: 9%;
+    width: 10%;
     height: 100%;
     font-size: 24px;
     font-family: monospace;
     background-color: #566282;
     color: white;
-    border: none
+    border: none;
+    margin-left: 10px;
 }
 
 .chat {
