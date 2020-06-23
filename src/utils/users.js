@@ -4,8 +4,8 @@ const roomLengthLimit = 40
 
 const addUser = ({ id, username, room }) => {
     // Clean the data
-    username = username.trim().toLowerCase()
-    room = room.trim().toLowerCase()
+    username = username.trim()
+    room = room.trim()
 
     // Confirm data is valid
     if (!username || !room) {
@@ -13,13 +13,13 @@ const addUser = ({ id, username, room }) => {
             error: 'Username and room are required!'
         }
     } else {
-        if (username.length > usernameLengthLimit){
+        if (username.length > usernameLengthLimit) {
             return {
                 error: `Username should be within ${usernameLengthLimit} characters`
             }
         }
 
-        if (room.length > roomLengthLimit){
+        if (room.length > roomLengthLimit) {
             return {
                 error: `Room name should be within ${usernameLengthLimit} characters`
             }
@@ -27,13 +27,21 @@ const addUser = ({ id, username, room }) => {
     }
 
     // Check for existing user
+    const tempUsername = username.toLowerCase()
+    const tempRoom = room.toLowerCase()
     const existingUser = users.find((user) => {
-        return user.room === room && user.username === username
+        if( user.room.toLowerCase() === tempRoom ) {
+            // room should match case with prexisting room
+            room = user.room
+            return user.username.toLowerCase() === tempUsername
+        }
+
+        return false
     })
 
     if (existingUser) {
         return {
-            error: 'Username is in use!'
+            error: 'Username is in use within current room!'
         }
     }
 
@@ -57,7 +65,7 @@ const getUser = (id) => {
 
 const getUsersInRoom = (room) => {
     room = room.trim().toLowerCase()
-    return users.filter((user) => user.room === room)
+    return users.filter((user) => user.room.toLowerCase() === room)
 }
 
 module.exports = {

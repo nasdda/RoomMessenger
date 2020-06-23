@@ -76,8 +76,6 @@ input[type="text"] {
     overflow-x: hidden;
     overflow-y: scroll;
     overflow: hidden;
-    padding-top: 20px;
-    padding-left: 10px;
   }
 
 .message-side {
@@ -153,6 +151,24 @@ input[type="text"] {
     color: #afb9cc
 }
 
+.room-name-div {
+    box-shadow: 3px 3px 10px 5px #1D1F26;
+    height: 25%;
+    width: 100%;
+    margin-bottom: 10%;
+    padding-top: 10%;
+    text-align: center;
+    background-color: #424e7d;
+}
+
+.list-title {
+    text-align: center;
+}
+
+.users {
+    text-align: center;
+    margin-top: 5%;
+}
 
 /* scrollbar customization */
 
