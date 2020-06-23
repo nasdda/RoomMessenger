@@ -125,14 +125,16 @@ input[type="text"] {
     font-family: monospace;
 }
 
+
 #messages {
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 1%;
+    margin-bottom: 1%;
     margin-left: 2%;
     margin-right: 2%;
     padding-right: 10%;
-    padding-left: 2%;
-    padding-bottom: 10px;
+    padding-left: 1%;
+    padding-bottom: 1%;
+    padding-top: 1%;
     overflow-x: hidden;
     overflow-wrap: break-word;
     overflow-y: scroll;
@@ -144,6 +146,11 @@ input[type="text"] {
     font-size: 20px;
     font-weight: bold;
     color: #c7d3eb
+}
+
+.message-text {
+    background-color: #515b75;
+    width: fit-content;
 }
 
 .message-time {
@@ -188,3 +195,24 @@ input[type="text"] {
     background: rgb(82, 113, 216);
     border-radius: 10px;
   }
+
+/* message display design */
+
+
+.chat-message {
+    padding-top: 1%;
+    padding-bottom: 1%;
+    padding-left: 2%;
+    padding-right: 2%; 
+    margin-bottom: 1%;   
+}
+
+#highlighted {
+    width: fit-content;
+    height: fit-content;
+    max-width: 70%;
+    background: rgb(84, 78, 165);
+    border-style: none;
+    border-width: 3px;
+    border-radius: 25px;
+}
