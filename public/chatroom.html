@@ -26,8 +26,8 @@
         </div>
     </div>
 
-    <script id="message-template" type="text/html">
-        <div class="chat-message" id="highlighted">
+    <script id="message-template-others" type="text/html">
+        <div class="chat-message-others" id="highlighted-others">
             <p>
                 <span class="message-name">{{username}}</span>
                 <span class="message-time">{{createdAt}}</span>
@@ -36,6 +36,17 @@
         </div>
     </script>
     
+    <script id="message-template-self" type="text/html">
+        <div class="chat-message-self" id="highlighted-self">
+            <p>
+                <span class="message-time">{{createdAt}}</span>
+                <span class="message-name">{{username}}</span>
+            </p>
+            <p>{{message}}</p>
+        </div>
+    </script>
+
+
     <script id="sidebar-template" type="text/html">
         <div class="room-name-div">
             <h2 class="room-name">{{room}}</h2>

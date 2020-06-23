@@ -12,7 +12,8 @@ const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true }
 
 
 // Mustache Templates
-const messageTemplate = document.querySelector('#message-template').innerHTML
+const messageTemplateOthers = document.querySelector('#message-template-others').innerHTML
+const messageTemplateSelf =document.querySelector("#message-template-self").innerHTML
 const sidebarTemplate = document.querySelector("#sidebar-template").innerHTML
 
 
@@ -33,7 +34,8 @@ const autoscroll = () => {
 
 // message received
 socket.on("message", (message) => {
-    const html = Mustache.render(messageTemplate, {
+    const html = Mustache.render(message.username === username ? messageTemplateSelf : messageTemplateOthers, 
+    {
         username: message.username,
         message: message.text,
         createdAt: moment(message.createdAt).format('h:mm a')
