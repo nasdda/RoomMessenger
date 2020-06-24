@@ -74,8 +74,7 @@ input[type="text"] {
     left: 0;
     background-color: #515b75; 
     overflow-x: hidden;
-    overflow-y: scroll;
-    overflow: hidden;
+    overflow-y: auto;
   }
 
 .message-side {
@@ -165,7 +164,7 @@ input[type="text"] {
 
 /* width */
 ::-webkit-scrollbar {
-    width: 20px;
+    width: 15px;
   }
   
   /* Track */
@@ -195,7 +194,7 @@ input[type="text"] {
     padding-top: 1%;
     overflow-x: hidden;
     overflow-wrap: break-word;
-    overflow-y: scroll;
+    overflow-y: auto;
     height: 85%;
     box-shadow: 3px 3px 10px 5px #81879e;
 }

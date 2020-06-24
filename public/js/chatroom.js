@@ -26,7 +26,7 @@ const autoscroll = () => {
     const containerHeight = $messages.scrollHeight 
     const scrollOffset = $messages.scrollTop + visibleHeight
     // dont autoscroll if user is not on the bottom of the chat
-    if(containerHeight - newMessageHeight <= scrollOffset){
+    if(containerHeight - newMessageHeight - 1 <= scrollOffset){
         $messages.scrollTop = $messages.scrollHeight
     }
 }

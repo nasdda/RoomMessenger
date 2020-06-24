@@ -3,7 +3,7 @@ const express = require('express')
 const path = require('path')
 const http = require('http')
 const socketio = require("socket.io")
-const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
+const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/rooms')
 const { generateMessage } = require('./utils/messages')
 
 // Setup app and server
@@ -21,6 +21,7 @@ app.use(express.static(publicDirectoryPath))
 // socket start
 io.on("connection", (socket) => {
     console.log("New user connected")
+    var currentRoom; // keep room name for later use
 
     socket.on('join', (options, callback) => {
         const { error, user } = addUser({ id: socket.id, ...options })
@@ -30,6 +31,7 @@ io.on("connection", (socket) => {
         }
 
         socket.join(user.room)
+        currentRoom = user.room
 
         socket.emit("message", generateMessage(user.room, `Welcome to room ${user.room}`))
         // notify other users in room
@@ -44,15 +46,14 @@ io.on("connection", (socket) => {
 
     socket.on('sendMessage', (message, callback) => {
         // received message to send, emit
-        const user = getUser(socket.id)
+        const user = getUser({ room: currentRoom, id: socket.id })
         io.to(user.room).emit('message', generateMessage(user.username, message))
         callback()
     })
 
     socket.on('disconnect', () => {
-        const user = removeUser(socket.id)
-
-        if(user) {
+        const user = removeUser({ room: currentRoom, id: socket.id })
+        if (user) {
             io.to(user.room).emit('message', generateMessage(user.room, `${user.username} has left the room.`))
             io.to(user.room).emit('roomData', {
                 room: user.room,
