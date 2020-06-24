@@ -30,7 +30,10 @@ const addUser = ({ id, username, room }) => {
     const tempUsername = username.toLowerCase()
     const tempRoom = room.toLowerCase()
     if (rooms.has(tempRoom)) {
-        room = rooms.get(tempRoom)[0].room // room name should match with pre-exsting room
+        const pastRoom = rooms.get(tempRoom)[0]
+        if(pastRoom) {
+            room = pastRoom.room // room name should match with pre-exsting room
+        }
         const existingUser = rooms.get(tempRoom).find((user) => {
             return user.username.toLowerCase() === tempUsername
         })
@@ -58,7 +61,7 @@ const removeUser = ({ room, id }) => {
             const index = rooms.get(room).findIndex((user) => user.id === id)
             if (index !== -1) {
                 const removed = rooms.get(room).splice(index, 1)[0]
-                if (!rooms.get(room)) {
+                if (rooms.get(room) == false) {
                     // room empty
                     rooms.delete(room)
                 }
@@ -81,10 +84,15 @@ const getUsersInRoom = (room) => {
     return rooms.get(room)
 }
 
+const getAllRoomData = () => {
+    return rooms
+}
+
 
 module.exports = {
     addUser,
     removeUser,
     getUser,
-    getUsersInRoom
+    getUsersInRoom,
+    getAllRoomData
 }
