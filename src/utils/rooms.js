@@ -31,7 +31,7 @@ const addUser = ({ id, username, room }) => {
     const tempRoom = room.toLowerCase()
     if (rooms.has(tempRoom)) {
         const pastRoom = rooms.get(tempRoom)[0]
-        if(pastRoom) {
+        if (pastRoom) {
             room = pastRoom.room // room name should match with pre-exsting room
         }
         const existingUser = rooms.get(tempRoom).find((user) => {
