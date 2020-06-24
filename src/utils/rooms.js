@@ -52,7 +52,7 @@ const addUser = ({ id, username, room }) => {
 }
 
 const removeUser = ({ room, id }) => {
-    if(room){
+    if (room) {
         room = room.toLowerCase()
         if (rooms.has(room)) {
             const index = rooms.get(room).findIndex((user) => user.id === id)
@@ -61,7 +61,7 @@ const removeUser = ({ room, id }) => {
                 if (!rooms.get(room)) {
                     // room empty
                     rooms.delete(room)
-                } 
+                }
 
                 return removed
             }
