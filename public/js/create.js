@@ -4,8 +4,6 @@ const socket = io()
 const $createForm = document.querySelector('#create-form')
 const $createFormButton = $createForm.querySelector(".index-button")
 
-const test = document.querySelector(".index-button")
-
 $createForm.addEventListener('submit', (e) => {
     e.preventDefault()
     $createFormButton.setAttribute('disabled', 'disabled')
@@ -13,8 +11,6 @@ $createForm.addEventListener('submit', (e) => {
     const roomName = e.target.elements.roomName.value
     const hostName = e.target.elements.hostName.value
     const roomCap = e.target.elements.roomCap.value
-
-    console.log(`room ${roomName} host ${hostName}`)
 
     socket.emit('createRoom', { roomName, hostName, roomCap }, (error) => {
         if (error) {
