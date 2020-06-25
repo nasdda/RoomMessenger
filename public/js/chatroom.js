@@ -78,6 +78,7 @@ $messageForm.addEventListener("submit", (e) => {
 
 // let server know user has joined
 socket.emit('join', { username, room }, (error) => {
+    console.log(`HERE AT CHAT: ${username}, ${room}`)
     if (error) {
         alert(error)
         location.href = '/' // go back to index

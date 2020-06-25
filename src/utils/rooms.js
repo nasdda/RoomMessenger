@@ -4,7 +4,7 @@ const rooms = new Map()
     room name -> { userList: list, password: encrypted string, numberOfUsers: integer }
 */
 
-const usernameLengthLimit = 30
+const usernameLengthLimit = 35
 const roomLengthLimit = 35
 
 const addUser = ({ id, username, room }) => {
@@ -49,12 +49,10 @@ const addUser = ({ id, username, room }) => {
             }
         }
     } else {
-        // new room
-        rooms.set(tempRoom, {
-            userList: [],
-            password: undefined,
-            numberOfUsers: 0
-        })
+        // room does not exist
+        return {
+            error: 'Room does not exist. Please check spelling or create new room.'
+        }
     }
 
     // store user
@@ -90,7 +88,10 @@ const getUser = ({ room, id }) => {
 
 const getUsersInRoom = (room) => {
     room = room.toLowerCase()
-    return rooms.get(room).userList
+    const currentRoom = rooms.get(room)
+    if(currentRoom){
+        return currentRoom.userList
+    }
 }
 
 const getAllRoomData = () => {
@@ -113,7 +114,12 @@ const createRoom = (roomName) => {
         }
     }
 
-    rooms.set(roomName, [])
+    rooms.set(roomName, {
+        userList: [], 
+        password: undefined, 
+        numberOfUsers: 0
+    })
+
     return {
         success: "Room created."
     }

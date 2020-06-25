@@ -23,9 +23,18 @@ io.on("connection", (socket) => {
     console.log("New user connected")
     var currentRoom; // keep room name for later use
 
+    socket.on('createRoom', (options, callback) => {
+        const { roomName, hostName, roomCap } = options
+        const { error, success } = createRoom(roomName)
+        if (error) {
+            return callback(error)
+        }
+
+        callback()
+    })
+
     socket.on('join', (options, callback) => {
         const { error, user } = addUser({ id: socket.id, ...options })
-
         if (error) {
             return callback(error)
         }
@@ -52,6 +61,10 @@ io.on("connection", (socket) => {
     })
 
     socket.on('disconnect', () => {
+        console.log("User disconnected")
+        if (!currentRoom) {
+            return
+        }
         const user = removeUser({ room: currentRoom, id: socket.id })
         if (user) {
             io.to(user.room).emit('message', generateMessage(user.room, `${user.username} has left the room.`))
