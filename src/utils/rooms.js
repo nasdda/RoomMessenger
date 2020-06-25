@@ -114,7 +114,7 @@ const createRoom = (roomName) => {
         }
     }
 
-    rooms.set(roomName, {
+    rooms.set(roomName.toLowerCase(), {
         userList: [], 
         password: undefined, 
         numberOfUsers: 0
