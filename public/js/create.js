@@ -1,4 +1,4 @@
-
+const socket = io()
 
 // elements
 const $createForm = document.querySelector('#create-form')

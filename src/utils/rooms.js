@@ -1,6 +1,11 @@
 const rooms = new Map()
-const usernameLengthLimit = 40
-const roomLengthLimit = 40
+/*
+    rooms Map format:
+    room name -> { userList: list, password: encrypted string, numberOfUsers: integer }
+*/
+
+const usernameLengthLimit = 30
+const roomLengthLimit = 35
 
 const addUser = ({ id, username, room }) => {
     // remove extra spaces
@@ -21,7 +26,7 @@ const addUser = ({ id, username, room }) => {
 
         if (room.length > roomLengthLimit) {
             return {
-                error: `Room name should be within ${usernameLengthLimit} characters`
+                error: `Room name should be within ${roomLengthLimit} characters`
             }
         }
     }
@@ -30,11 +35,11 @@ const addUser = ({ id, username, room }) => {
     const tempUsername = username.toLowerCase()
     const tempRoom = room.toLowerCase()
     if (rooms.has(tempRoom)) {
-        const pastRoom = rooms.get(tempRoom)[0]
-        if (pastRoom) {
-            room = pastRoom.room // room name should match with pre-exsting room
+        const otherUser = rooms.get(tempRoom).userList[0]
+        if (otherUser) {
+            room = otherUser.room // room name should match with pre-exsting room
         }
-        const existingUser = rooms.get(tempRoom).find((user) => {
+        const existingUser = rooms.get(tempRoom).userList.find((user) => {
             return user.username.toLowerCase() === tempUsername
         })
 
@@ -45,12 +50,16 @@ const addUser = ({ id, username, room }) => {
         }
     } else {
         // new room
-        rooms.set(tempRoom, [])
+        rooms.set(tempRoom, {
+            userList: [],
+            password: undefined,
+            numberOfUsers: 0
+        })
     }
 
     // store user
     const user = { id, username, room }
-    rooms.get(tempRoom).push(user)
+    rooms.get(tempRoom).userList.push(user)
     return { user }
 }
 
@@ -58,10 +67,10 @@ const removeUser = ({ room, id }) => {
     if (room) {
         room = room.toLowerCase()
         if (rooms.has(room)) {
-            const index = rooms.get(room).findIndex((user) => user.id === id)
+            const index = rooms.get(room).userList.findIndex((user) => user.id === id)
             if (index !== -1) {
-                const removed = rooms.get(room).splice(index, 1)[0]
-                if (rooms.get(room) == false) {
+                const removed = rooms.get(room).userList.splice(index, 1)[0]
+                if (rooms.get(room).userList == false) {
                     // room empty
                     rooms.delete(room)
                 }
@@ -75,13 +84,13 @@ const removeUser = ({ room, id }) => {
 const getUser = ({ room, id }) => {
     room = room.toLowerCase()
     if (rooms.has(room)) {
-        return rooms.get(room).find((user) => user.id === id)
+        return rooms.get(room).userList.find((user) => user.id === id)
     }
 }
 
 const getUsersInRoom = (room) => {
     room = room.toLowerCase()
-    return rooms.get(room)
+    return rooms.get(room).userList
 }
 
 const getAllRoomData = () => {
@@ -92,7 +101,22 @@ const getAllRoomData = () => {
 
 // room management
 const createRoom = (roomName) => {
+    if (rooms.has(roomName)) {
+        return {
+            error: "Room name already taken."
+        }
+    }
+
+    if (roomName.length > roomLengthLimit) {
+        return {
+            error: `Room name should be within ${roomLengthLimit} characters`
+        }
+    }
+
     rooms.set(roomName, [])
+    return {
+        success: "Room created."
+    }
 }
 
 
@@ -101,5 +125,6 @@ module.exports = {
     removeUser,
     getUser,
     getUsersInRoom,
-    getAllRoomData
+    getAllRoomData,
+    createRoom
 }

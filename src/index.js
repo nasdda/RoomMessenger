@@ -3,7 +3,7 @@ const express = require('express')
 const path = require('path')
 const http = require('http')
 const socketio = require("socket.io")
-const { addUser, removeUser, getUser, getUsersInRoom, getAllRoomData } = require('./utils/rooms')
+const { addUser, removeUser, getUser, getUsersInRoom, getAllRoomData, createRoom } = require('./utils/rooms')
 const { generateMessage } = require('./utils/messages')
 
 // Setup app and server
