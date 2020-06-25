@@ -89,6 +89,13 @@ const getAllRoomData = () => {
 }
 
 
+
+// room management
+const createRoom = (roomName) => {
+    rooms.set(roomName, [])
+}
+
+
 module.exports = {
     addUser,
     removeUser,

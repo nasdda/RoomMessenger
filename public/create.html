@@ -7,32 +7,33 @@
         <div class="create-outer">
             <div class="create-center">
                 <h1 class="header-text">Create Room</h1>
-                <form class="cr-form">
+                <form class="cr-form" id="create-form">
                     <div class="cr">
                         <h3>Room Name</h3>
-                        <input name="room-name" class="cr-input" type="text" required>
+                        <input name="room_name" class="cr-input" type="text" pattern=".*\S+.*" title="At least one non-white-space character is required." required>
                     </div>
                     <div class="cr">
-                        <h3>Host Name(you)</h3>
-                        <input name="host-name" class="cr-input" type="text" required>
+                        <h3>Host Name</h3>
+                        <input name="host_name" class="cr-input" type="text" pattern=".*\S+.*" title="At least one non-white-space character is required." required>
                     </div>
                     <div class="cr">
                         <h3>Password</h3>
-                        <input name="password" class="cr-input" type="text" required>
+                        <input name="password" class="cr-input" type="text" pattern=".*\S+.*" title="At least one non-white-space character is required." required>
                     </div>
                     <div class="cr">
                         <h3>Room Capacity</h3>
-                        <select name="room-cap" id="room-capacity" class="cr-dropdown">
+                        <select name="room_cap" id="room-capacity" class="cr-dropdown">
                             <option value="2">2</option>
                             <option value="3">3</option>
                             <option value="4">4</option>
                             <option value="5">5</option>
                         </select>
                     </div>
-                    <button class="index-button">Create</button>
+                    <button class="index-button" type="submit">Create</button>
                 </form>
             </div>
         </div>
+        <script src="js/create.js"></script>
     </body>
 
 </html>
