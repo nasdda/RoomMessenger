@@ -2,9 +2,11 @@
 const express = require('express')
 const path = require('path')
 const http = require('http')
+const bcrypt = require('bcrypt')
 const socketio = require("socket.io")
 const { addUser, removeUser, getUser, getUsersInRoom, getAllRoomData, createRoom } = require('./utils/rooms')
 const { generateMessage } = require('./utils/messages')
+
 
 // Setup app and server
 const app = express()
@@ -24,13 +26,11 @@ io.on("connection", (socket) => {
     var currentRoom; // keep room name for later use
 
     socket.on('createRoom', (options, callback) => {
-        const { roomName, hostName, roomCap } = options
-        const { error, success } = createRoom(roomName)
-        if (error) {
-            return callback(error)
-        }
-
-        callback()
+        createRoom(options).then((result) => {
+            callback()
+        }).catch((e) => {
+            callback(e)
+        })
     })
 
     socket.on('join', (options, callback) => {
@@ -55,6 +55,7 @@ io.on("connection", (socket) => {
 
     socket.on('sendMessage', (message, callback) => {
         // received message to send, emit
+        console.log(getAllRoomData()) /////////////////////////////////////////
         const user = getUser({ room: currentRoom, id: socket.id })
         io.to(user.room).emit('message', generateMessage(user.username, message))
         callback()

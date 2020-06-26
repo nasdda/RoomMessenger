@@ -13,7 +13,7 @@ const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true }
 
 // Mustache Templates
 const messageTemplateOthers = document.querySelector('#message-template-others').innerHTML
-const messageTemplateSelf =document.querySelector("#message-template-self").innerHTML
+const messageTemplateSelf = document.querySelector("#message-template-self").innerHTML
 const sidebarTemplate = document.querySelector("#sidebar-template").innerHTML
 
 
@@ -23,10 +23,10 @@ const autoscroll = () => {
     const newMessageMargin = parseInt(newMessageStyles.marginBottom)
     const newMessageHeight = $newMessage.offsetHeight + newMessageMargin
     const visibleHeight = $messages.offsetHeight
-    const containerHeight = $messages.scrollHeight 
+    const containerHeight = $messages.scrollHeight
     const scrollOffset = $messages.scrollTop + visibleHeight
     // dont autoscroll if user is not on the bottom of the chat
-    if(containerHeight - newMessageHeight - 1 <= scrollOffset){
+    if (containerHeight - newMessageHeight - 1 <= scrollOffset) {
         $messages.scrollTop = $messages.scrollHeight
     }
 }
@@ -34,12 +34,12 @@ const autoscroll = () => {
 
 // message received
 socket.on("message", (message) => {
-    const html = Mustache.render(message.username === username ? messageTemplateSelf : messageTemplateOthers, 
-    {
-        username: message.username,
-        message: message.text,
-        createdAt: moment(message.createdAt).format('h:mm a')
-    })
+    const html = Mustache.render(message.username === username ? messageTemplateSelf : messageTemplateOthers,
+        {
+            username: message.username,
+            message: message.text,
+            createdAt: moment(message.createdAt).format('h:mm a')
+        })
     $messages.insertAdjacentHTML('beforeend', html)
     autoscroll()
 })
@@ -68,6 +68,7 @@ $messageForm.addEventListener("submit", (e) => {
         $messageFormInput.focus()
 
         if (error) {
+            socket.disconnect()
             alert(error)
         }
     })
@@ -78,7 +79,6 @@ $messageForm.addEventListener("submit", (e) => {
 
 // let server know user has joined
 socket.emit('join', { username, room }, (error) => {
-    console.log(`HERE AT CHAT: ${username}, ${room}`)
     if (error) {
         alert(error)
         location.href = '/' // go back to index

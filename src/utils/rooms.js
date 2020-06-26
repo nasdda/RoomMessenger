@@ -1,11 +1,15 @@
+// npm modules
+const bcrypt = require('bcrypt')
+
 const rooms = new Map()
 /*
     rooms Map format:
-    room name -> { userList: list, password: encrypted string, numberOfUsers: integer }
+    room name -> { userList: list, password: encrypted string, roomCap: integer }
 */
 
 const usernameLengthLimit = 35
 const roomLengthLimit = 35
+const passwordLengthLimit = 50
 
 const addUser = ({ id, username, room }) => {
     // remove extra spaces
@@ -89,7 +93,7 @@ const getUser = ({ room, id }) => {
 const getUsersInRoom = (room) => {
     room = room.toLowerCase()
     const currentRoom = rooms.get(room)
-    if(currentRoom){
+    if (currentRoom) {
         return currentRoom.userList
     }
 }
@@ -101,28 +105,35 @@ const getAllRoomData = () => {
 
 
 // room management
-const createRoom = (roomName) => {
-    if (rooms.has(roomName)) {
-        return {
-            error: "Room name already taken."
-        }
-    }
+const createRoom = ({ roomName, hostName, password, roomCap }) => {
+    roomName = roomName.trim()
 
-    if (roomName.length > roomLengthLimit) {
-        return {
-            error: `Room name should be within ${roomLengthLimit} characters`
+    return new Promise((resolve, reject) => {
+        if (rooms.has(roomName.toLowerCase())) {
+            reject("Room name already taken.")
         }
-    }
-
-    rooms.set(roomName.toLowerCase(), {
-        userList: [], 
-        password: undefined, 
-        numberOfUsers: 0
+        else if (roomName.length > roomLengthLimit) {
+            reject(`Room name should be within ${roomLengthLimit} characters`)
+        }
+        else if (hostName.length > usernameLengthLimit) {
+            reject(`Host name should be within ${usernameLengthLimit} characters`)
+        }
+        else if (password.length > passwordLengthLimit) {
+            reject(`Password length should be within ${passwordLengthLimit}`)
+        }
+        else {
+            password = bcrypt.hash(password, 8).then((result) => {
+                rooms.set(roomName.toLowerCase(), {
+                    userList: [],
+                    password: result,
+                    roomCap
+                })
+                resolve("Successfully created room.")
+            }).catch((e) => {
+                reject(e)
+            })
+        }
     })
-
-    return {
-        success: "Room created."
-    }
 }
 
 
