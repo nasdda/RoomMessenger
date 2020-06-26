@@ -20,7 +20,6 @@ $createForm.addEventListener('submit', (e) => {
             $createFormButton.removeAttribute('disabled')
         } else {
             // successfully created room
-            console.log(error)
             socket.disconnect() // purpose of current connection is finished
             location.href = `./chatroom.html?username=${hostName}&room=${roomName}`
         }

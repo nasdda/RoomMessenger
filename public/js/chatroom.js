@@ -75,12 +75,29 @@ $messageForm.addEventListener("submit", (e) => {
 })
 
 
-
-
-// let server know user has joined
-socket.emit('join', { username, room }, (error) => {
-    if (error) {
-        alert(error)
-        location.href = '/' // go back to index
+socket.emit('validateJoin', { username, room }, (hashedPassword) => {
+    if (hashedPassword) {
+        // password is required
+        var password = window.prompt("Please enter password", "")
+        socket.emit('join', { username, room, password }, (error) => {
+            if (error) {
+                alert(error)
+                location.href = '/' // go back to index
+            }
+        })  
+    } else {
+        // no password is required
+        socket.emit('join', { username, room, password: undefined }, (error) => {
+            if (error) {
+                alert(error)
+                location.href = '/' // go back to index
+            }
+        }) 
     }
 })
+
+
+
+
+
+
