@@ -140,6 +140,9 @@ const getUser = ({ room, id }) => {
 }
 
 const getUsersInRoom = (room) => {
+    if(!room) {
+        return undefined
+    }
     room = room.toLowerCase()
     const currentRoom = rooms.get(room)
     if (currentRoom) {
