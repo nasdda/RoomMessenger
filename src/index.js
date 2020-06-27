@@ -4,7 +4,7 @@ const path = require('path')
 const http = require('http')
 const bcrypt = require('bcrypt')
 const socketio = require("socket.io")
-const { addUser, removeUser, getUser, getUsersInRoom, getRoomData, createRoom } = require('./utils/rooms')
+const { addUser, removeUser, getUser, getUsersInRoom, getRoomData, createRoom, getAllRoomData } = require('./utils/rooms')
 const { generateMessage } = require('./utils/messages')
 
 
@@ -27,6 +27,7 @@ io.on("connection", (socket) => {
 
     socket.on('createRoom', (options, callback) => {
         createRoom(options).then((result) => {
+            creatingStage = true
             callback()
         }).catch((e) => {
             callback(e)
@@ -35,6 +36,10 @@ io.on("connection", (socket) => {
 
     socket.on('validateJoin', (options, callback) => {
         if(!getRoomData(options.room)){
+            return callback()
+        }
+        if(getRoomData(options.room).hostName === options.username && getRoomData(options.room).userList == false){
+            // indicates current user is host
             return callback()
         }
         const hashedPassword = getRoomData(options.room).password
@@ -62,8 +67,13 @@ io.on("connection", (socket) => {
 
 
     socket.on('sendMessage', (message, callback) => {
+        console.log(getAllRoomData())
         // received message to send, emit
         const user = getUser({ room: currentRoom, id: socket.id })
+        if(!user) {
+            // cant find user
+            return callback()
+        }
         io.to(user.room).emit('message', generateMessage(user.username, message))
         callback()
     })

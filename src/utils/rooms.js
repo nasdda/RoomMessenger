@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt')
 const rooms = new Map()
 /*
     rooms Map format:
-    room name -> { userList: list, password: encrypted string, roomCap: integer }
+    room name -> { userList: list, hostName: string, password: encrypted string, roomCap: integer }
 */
 
 const usernameLengthLimit = 35
@@ -40,9 +40,44 @@ const addUser = ({ id, username, room, password }) => {
 
         const existingRoom = rooms.get(tempRoom)
 
+        if(existingRoom.hostName === username && existingRoom.userList == false && !password) {
+            // host joining
+            const user = { id, username, room }
+            rooms.get(tempRoom).userList.push(user)
+            return resolve(user)
+        }
+
         bcrypt.compare(password, existingRoom.password).then((result) => {
             if(!result){
                 // incorrect password
+                return reject('Password is incorrect.')
+            }
+
+            if (existingRoom.userList.length >= existingRoom.roomCap) {
+                return reject('Room capacity exceeded.')
+            }
+
+            // check for existing users
+            const otherUser = existingRoom.userList[0]
+
+            if (otherUser) {
+                room = otherUser.room // room name should match with pre-exsting room
+            }
+            const existingUser = existingRoom.userList.find((user) => {
+                return user.username.toLowerCase() === tempUsername
+            })
+
+            if (existingUser) {
+                return reject('Username is in use within current room!')
+            }
+
+            // store user
+            const user = { id, username, room }
+            rooms.get(tempRoom).userList.push(user)
+            return resolve(user)
+        }).catch((e) => {
+            if(existingRoom.password) {
+                // room has password
                 return reject('Password is incorrect.')
             }
 
@@ -91,6 +126,9 @@ const removeUser = ({ room, id }) => {
 }
 
 const getUser = ({ room, id }) => {
+    if(!room) {
+        return undefined
+    }
     room = room.toLowerCase()
     if (rooms.has(room)) {
         return rooms.get(room).userList.find((user) => user.id === id)
@@ -109,6 +147,10 @@ const getRoomData = (room) => {
     return rooms.get(room)
 }
 
+const getAllRoomData = () => {
+    return rooms
+}
+
 
 
 // room management
@@ -117,16 +159,16 @@ const createRoom = ({ roomName, hostName, password, roomCap }) => {
 
     return new Promise((resolve, reject) => {
         if (rooms.has(roomName.toLowerCase())) {
-            reject("Room name already taken.")
+            return reject("Room name already taken.")
         }
         else if (roomName.length > roomLengthLimit) {
-            reject(`Room name should be within ${roomLengthLimit} characters`)
+            return reject(`Room name should be within ${roomLengthLimit} characters`)
         }
         else if (hostName.length > usernameLengthLimit) {
-            reject(`Host name should be within ${usernameLengthLimit} characters`)
+            return reject(`Host name should be within ${usernameLengthLimit} characters`)
         }
         else if (password.length > passwordLengthLimit) {
-            reject(`Password length should be within ${passwordLengthLimit}`)
+            return reject(`Password length should be within ${passwordLengthLimit}`)
         }
         else {
 
@@ -135,21 +177,23 @@ const createRoom = ({ roomName, hostName, password, roomCap }) => {
                 password = bcrypt.hash(password, 8).then((result) => {
                     rooms.set(roomName.toLowerCase(), {
                         userList: [],
+                        hostName: hostName.trim(),
                         password: result,
                         roomCap
                     })
-                    resolve("Successfully created room.")
+                    return resolve("Successfully created room.")
                 }).catch((e) => {
-                    reject(e)
+                    return reject(e)
                 })
             } else {
                 // no password provided
                 rooms.set(roomName.toLowerCase(), {
                     userList: [],
+                    hostName: hostName.trim(),
                     password: undefined,
                     roomCap
                 })
-                resolve("Successfully created room.")
+                return resolve("Successfully created room.")
             }
         }
     })
@@ -162,5 +206,6 @@ module.exports = {
     getUser,
     getUsersInRoom,
     getRoomData,
-    createRoom
+    createRoom,
+    getAllRoomData
 }
