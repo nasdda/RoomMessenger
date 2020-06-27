@@ -35,10 +35,10 @@ io.on("connection", (socket) => {
     })
 
     socket.on('validateJoin', (options, callback) => {
-        if(!getRoomData(options.room)){
+        if (!getRoomData(options.room)) {
             return callback()
         }
-        if(getRoomData(options.room).hostName === options.username && getRoomData(options.room).userList == false){
+        if (getRoomData(options.room).hostName === options.username && getRoomData(options.room).userList == false) {
             // indicates current user is host
             return callback()
         }
@@ -70,7 +70,7 @@ io.on("connection", (socket) => {
         console.log(getAllRoomData())
         // received message to send, emit
         const user = getUser({ room: currentRoom, id: socket.id })
-        if(!user) {
+        if (!user) {
             // cant find user
             return callback()
         }

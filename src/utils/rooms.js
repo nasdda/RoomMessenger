@@ -19,15 +19,15 @@ const addUser = ({ id, username, room, password }) => {
     return new Promise((resolve, reject) => {
         // confirm data is valid
         if (!username || !room) {
-            reject('Username and room are required!')
+            return reject('Username and room are required!')
         }
 
         if (username.length > usernameLengthLimit) {
-            reject(`Username should be within ${usernameLengthLimit} characters`)
+            return reject(`Username should be within ${usernameLengthLimit} characters`)
         }
 
         if (room.length > roomLengthLimit) {
-            reject(`Room name should be within ${roomLengthLimit} characters`)
+            return reject(`Room name should be within ${roomLengthLimit} characters`)
         }
 
         const tempUsername = username.toLowerCase()
@@ -35,12 +35,16 @@ const addUser = ({ id, username, room, password }) => {
 
         if (!rooms.has(tempRoom)) {
             // room does not exist
-            reject('Room does not exist. Please check spelling or create new room.')
+            return reject('Room does not exist. Please check spelling or create new room.')
+        }
+
+        if(tempUsername === tempRoom) {
+            return reject('Username cannot be the same as room name.')
         }
 
         const existingRoom = rooms.get(tempRoom)
 
-        if(existingRoom.hostName === username && existingRoom.userList == false && !password) {
+        if (existingRoom.hostName === username && existingRoom.userList == false && !password) {
             // host joining
             const user = { id, username, room }
             rooms.get(tempRoom).userList.push(user)
@@ -48,7 +52,7 @@ const addUser = ({ id, username, room, password }) => {
         }
 
         bcrypt.compare(password, existingRoom.password).then((result) => {
-            if(!result){
+            if (!result) {
                 // incorrect password
                 return reject('Password is incorrect.')
             }
@@ -76,7 +80,7 @@ const addUser = ({ id, username, room, password }) => {
             rooms.get(tempRoom).userList.push(user)
             return resolve(user)
         }).catch((e) => {
-            if(existingRoom.password) {
+            if (existingRoom.password) {
                 // room has password
                 return reject('Password is incorrect.')
             }
@@ -126,7 +130,7 @@ const removeUser = ({ room, id }) => {
 }
 
 const getUser = ({ room, id }) => {
-    if(!room) {
+    if (!room) {
         return undefined
     }
     room = room.toLowerCase()
@@ -156,6 +160,7 @@ const getAllRoomData = () => {
 // room management
 const createRoom = ({ roomName, hostName, password, roomCap }) => {
     roomName = roomName.trim()
+    hostName = hostName.trim()
 
     return new Promise((resolve, reject) => {
         if (rooms.has(roomName.toLowerCase())) {
@@ -170,6 +175,9 @@ const createRoom = ({ roomName, hostName, password, roomCap }) => {
         else if (password.length > passwordLengthLimit) {
             return reject(`Password length should be within ${passwordLengthLimit}`)
         }
+        else if (hostName.toLowerCase() === roomName.toLowerCase()) {
+            return reject('Host name cannot be the same as room name.')
+        }
         else {
 
             if (password.trim()) {
@@ -177,7 +185,7 @@ const createRoom = ({ roomName, hostName, password, roomCap }) => {
                 password = bcrypt.hash(password, 8).then((result) => {
                     rooms.set(roomName.toLowerCase(), {
                         userList: [],
-                        hostName: hostName.trim(),
+                        hostName,
                         password: result,
                         roomCap
                     })
@@ -189,7 +197,7 @@ const createRoom = ({ roomName, hostName, password, roomCap }) => {
                 // no password provided
                 rooms.set(roomName.toLowerCase(), {
                     userList: [],
-                    hostName: hostName.trim(),
+                    hostName,
                     password: undefined,
                     roomCap
                 })

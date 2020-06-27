@@ -84,7 +84,7 @@ socket.emit('validateJoin', { username, room }, (hashedPassword) => {
                 alert(error)
                 location.href = '/' // go back to index
             }
-        })  
+        })
     } else {
         // no password is required
         socket.emit('join', { username, room, password: undefined }, (error) => {
@@ -92,7 +92,7 @@ socket.emit('validateJoin', { username, room }, (hashedPassword) => {
                 alert(error)
                 location.href = '/' // go back to index
             }
-        }) 
+        })
     }
 })
 
