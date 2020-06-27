@@ -57,7 +57,8 @@ io.on("connection", (socket) => {
             socket.broadcast.to(user.room).emit("message", generateMessage(user.room, `${user.username} has joined!`))
             io.to(user.room).emit('roomData', {
                 room: user.room,
-                users: getUsersInRoom(user.room)
+                users: getUsersInRoom(user.room),
+                hostName: getRoomData(user.room).hostName
             })
             callback()
         }).catch((e) => {

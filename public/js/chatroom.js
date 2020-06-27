@@ -6,7 +6,6 @@ const $messageFormInput = $messageForm.querySelector("#message-input")
 const $messageFormButton = $messageForm.querySelector("#send-button")
 const $messages = document.querySelector('#messages')
 
-
 // queue options
 const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 
@@ -46,12 +45,35 @@ socket.on("message", (message) => {
 
 
 // room data received
-socket.on('roomData', ({ room, users }) => {
+socket.on('roomData', ({ room, users, hostName }) => {
     const html = Mustache.render(sidebarTemplate, {
         room,
         users
     })
     document.querySelector("#chat-sidebar").innerHTML = html
+
+
+    // add kick functionality for each username
+    console.log(`${username} - ${hostName}`)
+    if(username === hostName){ // only host can kick
+        const $sidebarUsernames = document.querySelectorAll(".sidebar-username")
+        $sidebarUsernames.forEach((e)=> {
+            e.addEventListener('mouseover', (e) => {
+                if(e.target.innerText !== hostName){ // cannot kick host 
+                    e.target.style.color = "red"
+                }
+            })
+
+        })
+
+        $sidebarUsernames.forEach((e)=> {
+            e.addEventListener('mouseleave', (e) => {
+                if(e.target.innerText !== hostName){
+                    e.target.style.color = "white"
+                }
+            })
+        })
+    }
 })
 
 
@@ -75,6 +97,7 @@ $messageForm.addEventListener("submit", (e) => {
 })
 
 
+// initial emit to server
 socket.emit('validateJoin', { username, room }, (hashedPassword) => {
     if (hashedPassword) {
         // password is required

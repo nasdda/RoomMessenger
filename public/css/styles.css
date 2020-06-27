@@ -74,6 +74,7 @@ input[type="password"] {
 
 #chat-sidebar {
     float: left;
+    text-align: center;
     height: 100%; 
     width: 20%;
     position: fixed; 
@@ -156,12 +157,13 @@ input[type="password"] {
     background-color: #424e7d;
 }
 
+/*
 .list-title {
-    text-align: center;
+
 }
+*/
 
 .users {
-    text-align: center;
     margin-top: 5%;
 }
 
@@ -291,3 +293,6 @@ input[type="password"] {
     justify-content: center;
     margin-top: 5%;
 }
+
+
+/* usernames */
