@@ -105,6 +105,7 @@ socket.on('roomData', ({ room, users, hostName }) => {
 // kicked by host
 socket.on('kicked', ({ userToKick }) => {
     if (username.toLowerCase() === userToKick.toLowerCase()) {
+        socket.disconnect()
         alert('You have been kicked by room host.')
         location.href = '/'
     }
