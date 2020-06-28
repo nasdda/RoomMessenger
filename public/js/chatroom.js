@@ -104,7 +104,7 @@ socket.on('roomData', ({ room, users, hostName }) => {
 
 // kicked by host
 socket.on('kicked', ({ userToKick }) => {
-    if (username.toLowerCase() === userToKick) {
+    if (username.toLowerCase() === userToKick.toLowerCase()) {
         alert('You have been kicked by room host.')
         location.href = '/'
     }
@@ -116,7 +116,6 @@ $messageForm.addEventListener("submit", (e) => {
     e.preventDefault()
     $messageFormButton.setAttribute('disabled', 'disabled')
     const message = e.target.elements.message.value
-
 
     socket.emit('sendMessage', message, (error) => {
         $messageFormButton.removeAttribute('disabled')
