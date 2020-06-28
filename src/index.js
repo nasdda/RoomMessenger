@@ -79,6 +79,10 @@ io.on("connection", (socket) => {
         callback()
     })
 
+    socket.on('kick', (selection, callback) => {
+        socket.broadcast.to(selection.room.toLowerCase()).emit('kicked', { userToKick: selection.userToKick })
+    })
+
     socket.on('disconnect', () => {
         console.log("User disconnected")
         if (!currentRoom) {

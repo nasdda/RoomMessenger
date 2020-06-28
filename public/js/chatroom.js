@@ -15,6 +15,9 @@ const messageTemplateOthers = document.querySelector('#message-template-others')
 const messageTemplateSelf = document.querySelector("#message-template-self").innerHTML
 const sidebarTemplate = document.querySelector("#sidebar-template").innerHTML
 
+// room information
+var host
+
 
 const autoscroll = () => {
     const $newMessage = $messages.lastElementChild
@@ -52,27 +55,58 @@ socket.on('roomData', ({ room, users, hostName }) => {
     })
     document.querySelector("#chat-sidebar").innerHTML = html
 
+    // extract host name on initial call
+    if (!host) {
+        host = hostName
+    }
 
     // add kick functionality for each username
-    console.log(`${username} - ${hostName}`)
-    if(username === hostName){ // only host can kick
-        const $sidebarUsernames = document.querySelectorAll(".sidebar-username")
-        $sidebarUsernames.forEach((e)=> {
+    const $sidebarUsernames = document.querySelectorAll(".sidebar-username")
+    if (username === host) { // only host can kick
+        $sidebarUsernames.forEach((e) => {
             e.addEventListener('mouseover', (e) => {
-                if(e.target.innerText !== hostName){ // cannot kick host 
+                if (e.target.innerText !== host) {
                     e.target.style.color = "red"
                 }
             })
-
         })
 
-        $sidebarUsernames.forEach((e)=> {
+        $sidebarUsernames.forEach((e) => {
+            e.addEventListener('click', (e) => {
+                if (e.target.innerText !== host) { // cannot kick host 
+                    socket.emit('kick', { userToKick: e.target.innerText, room }, (error) => {
+                        if (error) {
+                            alert(error)
+                        }
+                    })
+                } else {
+                    alert('Cannot kick yourself.')
+                }
+            })
+        })
+
+        $sidebarUsernames.forEach((e) => {
             e.addEventListener('mouseleave', (e) => {
-                if(e.target.innerText !== hostName){
+                if (e.target.innerText !== host) {
                     e.target.style.color = "white"
                 }
             })
         })
+    } else {
+        // non host users attempted to kick
+        $sidebarUsernames.forEach((e) => {
+            e.addEventListener('click', (e) => {
+                alert('Only the host can kick users.')
+            })
+        })
+    }
+})
+
+// kicked by host
+socket.on('kicked', ({ userToKick }) => {
+    if (username.toLowerCase() === userToKick) {
+        alert('You have been kicked by room host.')
+        location.href = '/'
     }
 })
 
