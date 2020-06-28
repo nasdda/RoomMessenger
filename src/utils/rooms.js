@@ -182,7 +182,6 @@ const createRoom = ({ roomName, hostName, password, roomCap }) => {
             return reject('Host name cannot be the same as room name.')
         }
         else {
-
             if (password.trim()) {
                 // password provided
                 password = bcrypt.hash(password, 8).then((result) => {

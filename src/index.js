@@ -57,11 +57,12 @@ io.on("connection", (socket) => {
             socket.broadcast.to(user.room).emit("message", generateMessage(user.room, `${user.username} has joined!`))
             io.to(user.room).emit('roomData', {
                 room: user.room,
-                users: getUsersInRoom(user.room),
-                hostName: getRoomData(user.room).hostName
+                users: getUsersInRoom(user.room.toLowerCase()),
+                hostName: getRoomData(user.room.toLowerCase()).hostName
             })
             callback()
         }).catch((e) => {
+            console.log(e)
             return callback(e)
         })
     })
@@ -80,9 +81,9 @@ io.on("connection", (socket) => {
     })
 
     socket.on('kick', (selection, callback) => {
-        io.to(selection.room.toLowerCase()).emit('message', generateMessage(selection.room, 
+        io.to(selection.room).emit('message', generateMessage(selection.room, 
             `${selection.userToKick} has been kicked out by the host.`))
-        socket.broadcast.to(selection.room.toLowerCase()).emit('kicked', { userToKick: selection.userToKick })
+        socket.broadcast.to(selection.room).emit('kicked', { userToKick: selection.userToKick })
     })
 
     socket.on('disconnect', () => {
