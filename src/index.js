@@ -50,15 +50,15 @@ io.on("connection", (socket) => {
     socket.on('join', (options, callback) => {
         addUser({ id: socket.id, ...options }).then((user) => {
             currentRoom = user.room
-            socket.join(user.room)
+            socket.join(user.room) // join is case sensitive. toLowerCase should NOT be called on any .to functions
 
             socket.emit("message", generateMessage(user.room, `Welcome to room ${user.room}`))
             // notify other users in room
             socket.broadcast.to(user.room).emit("message", generateMessage(user.room, `${user.username} has joined!`))
             io.to(user.room).emit('roomData', {
                 room: user.room,
-                users: getUsersInRoom(user.room.toLowerCase()),
-                hostName: getRoomData(user.room.toLowerCase()).hostName
+                users: getUsersInRoom(user.room),
+                hostName: getRoomData(user.room).hostName
             })
             callback()
         }).catch((e) => {

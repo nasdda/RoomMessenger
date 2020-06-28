@@ -151,6 +151,10 @@ const getUsersInRoom = (room) => {
 }
 
 const getRoomData = (room) => {
+    if(!room) {
+        return undefined
+    }
+    room = room.toLowerCase()
     return rooms.get(room)
 }
 
