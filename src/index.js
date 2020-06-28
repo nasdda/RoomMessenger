@@ -80,6 +80,8 @@ io.on("connection", (socket) => {
     })
 
     socket.on('kick', (selection, callback) => {
+        io.to(selection.room.toLowerCase()).emit('message', generateMessage(selection.room, 
+            `${selection.userToKick} has been kicked out by the host.`))
         socket.broadcast.to(selection.room.toLowerCase()).emit('kicked', { userToKick: selection.userToKick })
     })
 
