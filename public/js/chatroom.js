@@ -106,7 +106,7 @@ socket.on('roomData', ({ room, users, hostName }) => {
 socket.on('kicked', ({ userToKick }) => {
     if (username.toLowerCase() === userToKick.toLowerCase()) {
         socket.disconnect()
-        alert('You have been kicked by room host.')
+        alert('You have been kicked out by room host.')
         location.href = '/'
     }
 })
@@ -145,7 +145,7 @@ socket.emit('validateJoin', { username, room }, (hashedPassword) => {
     } else {
         // no password is required
         socket.emit('join', { username, room, password: undefined }, (error) => {
-            if (error) {                
+            if (error) {
                 alert(error)
                 location.href = '/' // go back to index
             }

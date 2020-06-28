@@ -19,11 +19,10 @@ const publicDirectoryPath = path.join(__dirname, '../public')
 // set up static path
 app.use(express.static(publicDirectoryPath))
 
-
 // socket start
 io.on("connection", (socket) => {
     console.log("New user connected")
-    var currentRoom; // keep room name for later use
+    var currentRoom // keep room name for later use
 
     socket.on('createRoom', (options, callback) => {
         createRoom(options).then((result) => {
@@ -81,7 +80,7 @@ io.on("connection", (socket) => {
     })
 
     socket.on('kick', (selection, callback) => {
-        io.to(selection.room).emit('message', generateMessage(selection.room, 
+        io.to(selection.room).emit('message', generateMessage(selection.room,
             `${selection.userToKick} has been kicked out by the host.`))
         socket.broadcast.to(selection.room).emit('kicked', { userToKick: selection.userToKick })
     })

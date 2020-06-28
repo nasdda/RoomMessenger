@@ -38,7 +38,7 @@ const addUser = ({ id, username, room, password }) => {
             return reject('Room does not exist. Please check spelling or create new room.')
         }
 
-        if(tempUsername === tempRoom) {
+        if (tempUsername === tempRoom) {
             return reject('Username cannot be the same as room name.')
         }
 
@@ -140,7 +140,7 @@ const getUser = ({ room, id }) => {
 }
 
 const getUsersInRoom = (room) => {
-    if(!room) {
+    if (!room) {
         return undefined
     }
     room = room.toLowerCase()
@@ -151,7 +151,7 @@ const getUsersInRoom = (room) => {
 }
 
 const getRoomData = (room) => {
-    if(!room) {
+    if (!room) {
         return undefined
     }
     room = room.toLowerCase()
