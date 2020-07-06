@@ -1,8 +1,6 @@
 // imports
 const express = require('express')
 const path = require('path')
-const http = require('http')
-const bcrypt = require('bcrypt')
 const socketio = require("socket.io")
 const { addUser, removeUser, getUser, getUsersInRoom, getRoomData, createRoom, getAllRoomData } = require('./utils/rooms')
 const { generateMessage } = require('./utils/messages')
@@ -10,7 +8,7 @@ const { generateMessage } = require('./utils/messages')
 
 // Setup app and server
 const app = express()
-const server = http.createServer(app)
+const server = require('http').createServer(app)
 const io = socketio(server)
 
 const port = process.env.PORT || 3000

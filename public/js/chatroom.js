@@ -74,11 +74,13 @@ socket.on('roomData', ({ room, users, hostName }) => {
         $sidebarUsernames.forEach((e) => {
             e.addEventListener('click', (e) => {
                 if (e.target.innerText !== host) { // cannot kick host 
-                    socket.emit('kick', { userToKick: e.target.innerText, room }, (error) => {
-                        if (error) {
-                            alert(error)
-                        }
-                    })
+                    if(window.confirm(`Kick ${e.target.innerText}?`)){
+                        socket.emit('kick', { userToKick: e.target.innerText, room }, (error) => {
+                            if (error) {
+                                alert(error)
+                            }
+                        })
+                    }
                 } else {
                     alert('Cannot kick yourself.')
                 }
