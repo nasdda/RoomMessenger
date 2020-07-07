@@ -16,7 +16,7 @@ const messageTemplateSelf = document.querySelector("#message-template-self").inn
 const sidebarTemplate = document.querySelector("#sidebar-template").innerHTML
 
 // room information
-var host
+let host
 
 
 const autoscroll = () => {
@@ -137,7 +137,7 @@ $messageForm.addEventListener("submit", (e) => {
 socket.emit('validateJoin', { username, room }, (hashedPassword) => {
     if (hashedPassword) {
         // password is required
-        var password = window.prompt("Please enter password", "")
+        let password = window.prompt("Please enter password", "")
         socket.emit('join', { username, room, password }, (error) => {
             if (error) {
                 alert(error)

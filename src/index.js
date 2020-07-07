@@ -20,7 +20,7 @@ app.use(express.static(publicDirectoryPath))
 // socket start
 io.on("connection", (socket) => {
     console.log("New user connected")
-    var currentRoom // keep room name for later use
+    let currentRoom // keep room name for later use
 
     socket.on('createRoom', (options, callback) => {
         createRoom(options).then((result) => {
