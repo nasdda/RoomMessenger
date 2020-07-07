@@ -66,7 +66,7 @@ io.on("connection", (socket) => {
 
 
     socket.on('sendMessage', (message, callback) => {
-        console.log(getAllRoomData())
+        // console.log(getAllRoomData())
         // received message to send, emit
         const user = getUser({ room: currentRoom, id: socket.id })
         if (!user) {
