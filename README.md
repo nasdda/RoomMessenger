@@ -1,4 +1,5 @@
 ### Heroku link: https://yan-roomessenger.herokuapp.com/
+*might take some time for site to load due to heroku server putting the site to sleep after 30 minutes of inactivity.*
 
 Note: Meant to work as intended on Chrome browser. 
 There exists potential CSS differences when accessing on other browsers.
